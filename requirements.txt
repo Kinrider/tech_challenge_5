@@ -1,0 +1,17 @@
+numpy==1.24.4
+pandas==1.5.3
+scikit-learn==1.2.2
+scipy==1.10.1
+matplotlib==3.5.3
+seaborn==0.12.2
+plotly==5.14.1
+umap-learn==0.5.3
+hdbscan==0.8.33
+yellowbrick==1.5
+scikit-learn-extra==0.2.0  # kmedoids, etc
+jupyterlab==3.6.3
+ipykernel==6.22.0
+notebook==6.5.4
+openpyxl==3.1.2
+pyarrow==12.0.1  # caso use arquivos parquet
+mplcursors==0.5.3
