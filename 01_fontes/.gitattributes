@@ -1,1 +1,2 @@
 arquivos_decision/* filter=lfs diff=lfs merge=lfs -text
+arquivos_decision/fontes_tratadas* filter=lfs diff=lfs merge=lfs -text
