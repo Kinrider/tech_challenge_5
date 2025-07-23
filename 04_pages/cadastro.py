@@ -42,19 +42,18 @@ def preparar_input(form_dict, colunas_modelo, scaler):
 
     # === One-hot encoding ===
     colunas_categoricas = ['categoria_profissional', 'subarea_profissional', 'nivel_hierarquico']
-    df_input = pd.get_dummies(df_input, columns=colunas_categoricas, drop_first=True)
+    df_input = pd.get_dummies(df_input, columns=colunas_categoricas, drop_first=False)
 
-    # === Tratamento de NaNs ===
-    colunas_com_nan = df_input.columns[df_input.isnull().any()].tolist()
-    for col in colunas_com_nan:
-        df_input[f"tem_{col}"] = df_input[col].notnull().astype(int)
+    # === Flags "tem_" para campos com 0 ou NaN
+    colunas_flag = ['remuneracao_zscore', 'tempo_experiencia_anos', 'quantidade_experiencias']
+    for col in colunas_flag:
+        df_input[f"tem_{col}"] = df_input[col].apply(lambda x: 0 if pd.isna(x) or x == 0 else 1)
         df_input[col] = df_input[col].fillna(-9999)
 
-    # === Escalonamento (usando scaler salvo) ===
-    variaveis_continuas = ['remuneracao_zscore', 'tempo_experiencia_anos', 'quantidade_experiencias']
-    df_input[variaveis_continuas] = scaler.transform(df_input[variaveis_continuas])
+    # === Escalonamento com scaler treinado
+    df_input[colunas_flag] = scaler.transform(df_input[colunas_flag])
 
-    # === Garantir colunas compatíveis com o modelo ===
+    # === Garantir que todas as colunas usadas no modelo estejam presentes
     for col in colunas_modelo:
         if col not in df_input.columns:
             df_input[col] = 0
@@ -111,8 +110,9 @@ def render():
         }
 
         df_input = preparar_input(input_dict, colunas_modelo, scaler)
+
+        st.write("📊 Vetor de entrada ao modelo:", df_input)  # Depuração
         cluster_predito = modelo.predict(df_input)[0]
-        st.write("Input ao modelo:", df_input)
 
         nomes_clusters = {
             0: "Veteranos Invisíveis",
