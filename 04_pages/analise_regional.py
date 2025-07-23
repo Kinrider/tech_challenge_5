@@ -4,8 +4,8 @@ import plotly.express as px
 
 @st.cache_data
 def carregar_base_sumarizada():
-    url = "https://github.com/Kinrider/tech_challenge_5/raw/main/01_fontes/arquivos_decision/fontes_tratadas/05_dados_sumarizados.xlsx"
-    return pd.read_excel(url)
+    url = "https://github.com/Kinrider/tech_challenge_5/raw/main/01_fontes/arquivos_decision/fontes_tratadas/05_dados_sumarizados.parquet"
+    return pd.read_parquet(url)
 
 def render():
     st.title("🌍 Análise Regional do Candidato")
@@ -48,6 +48,7 @@ def render():
     st.dataframe(
         df_filtro[[
             "faixa_etaria",
+            "candidatos",
             "escolaridade_media",
             "perc_com_sap",
             "remuneracao_media",
