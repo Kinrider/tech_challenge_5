@@ -1,4 +1,11 @@
 import streamlit as st
+import sys
+from pathlib import Path
+
+# Adiciona o diretório 04_pages ao path
+sys.path.append(str(Path(__file__).parent / "04_pages"))
+
+# Importa as páginas
 from clusters import render as render_clusters
 from cadastro import render as render_cadastro
 from analise_regional import render as render_analise
