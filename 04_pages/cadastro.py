@@ -42,7 +42,7 @@ def preparar_input(form_dict, colunas_modelo, scaler):
 
     # === One-hot encoding ===
     colunas_categoricas = ['categoria_profissional', 'subarea_profissional', 'nivel_hierarquico']
-    df_input = pd.get_dummies(df_input, columns=colunas_categoricas, drop_first=False)
+    df_input = pd.get_dummies(df_input, columns=colunas_categoricas, drop_first=True)
 
     # === Tratamento de NaNs ===
     colunas_com_nan = df_input.columns[df_input.isnull().any()].tolist()
@@ -112,6 +112,7 @@ def render():
 
         df_input = preparar_input(input_dict, colunas_modelo, scaler)
         cluster_predito = modelo.predict(df_input)[0]
+        st.write("Input ao modelo:", df_input)
 
         nomes_clusters = {
             0: "Veteranos Invisíveis",
