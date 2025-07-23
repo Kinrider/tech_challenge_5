@@ -14,7 +14,7 @@ def carregar_recursos():
 @st.cache_data
 def carregar_parametros_zscore():
     BASE_GITHUB = "https://github.com/Kinrider/tech_challenge_5/raw/main"
-    df = pd.read_parquet('https://github.com/Kinrider/tech_challenge_5/raw/refs/heads/main/01_fontes/arquivos_decision/fontes_tratadas/02_candidatos_tratados.parquet', engine="pyarrow")
+    df = pd.read_parquet('https://github.com/Kinrider/tech_challenge_5/raw/refs/heads/main/01_fontes/arquivos_decision/fontes_tratadas/remuneracao_mensal_only.parquet', engine="pyarrow")
     media = df["remuneracao_mensal_brl"].replace(-9999, pd.NA).dropna().mean()
     desvio = df["remuneracao_mensal_brl"].replace(-9999, pd.NA).dropna().std()
     return media, desvio
@@ -89,9 +89,23 @@ def render():
         df_input = preparar_input(input_dict, colunas_modelo)
         cluster_predito = modelo.predict(df_input)[0]
 
-        st.success(f"✅ O candidato foi classificado como pertencente ao **Cluster {cluster_predito}**.")
+        # Dicionário de nomes dos clusters
+        nomes_clusters = {
+            0: "Veteranos Invisíveis",
+            1: "Exploradores em Branco",
+            2: "Especialistas Aspiracionais",
+            3: "Sombras do Cadastro"
+        }
+
+        nome_cluster = nomes_clusters.get(cluster_predito, f"Cluster {cluster_predito}")
+
+        st.success(f"✅ O candidato foi classificado como pertencente ao **Cluster {cluster_predito} — {nome_cluster}**.")
+
+        # Salvar no session_state
         st.session_state["candidato_classificado"] = {
             "cluster": cluster_predito,
+            "nome_cluster": nome_cluster,
             "estado": estado,
             "nome": nome
         }
+
