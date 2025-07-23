@@ -14,7 +14,7 @@ def carregar_recursos():
 @st.cache_data
 def carregar_parametros_zscore():
     BASE_GITHUB = "https://github.com/Kinrider/tech_challenge_5/raw/main"
-    df = pd.read_parquet(f"{BASE_GITHUB}/03_modelos/04_clusterizados.parquet", engine="pyarrow")
+    df = pd.read_parquet('https://github.com/Kinrider/tech_challenge_5/raw/refs/heads/main/01_fontes/arquivos_decision/fontes_tratadas/02_candidatos_tratados.parquet', engine="pyarrow")
     media = df["remuneracao_mensal_brl"].replace(-9999, pd.NA).dropna().mean()
     desvio = df["remuneracao_mensal_brl"].replace(-9999, pd.NA).dropna().std()
     return media, desvio
@@ -61,7 +61,7 @@ def render():
             "ensino fundamental", "ensino médio", "ensino superior",
             "superior incompleto", "pós-graduação ou mais", "não identificado"
         ])
-        tempo_experiencia_anos = st.number_input("Tempo de experiência (anos)", 0.0, 50.0, step=0.5)
+        tempo_experiencia_anos = st.number_input("Tempo de experiência (anos)", 0, 50)
         quantidade_experiencias = st.number_input("Quantidade de experiências", 0, 30, 0)
         experiencia_sap = st.checkbox("Possui experiência com SAP?")
         remuneracao_mensal_brl = st.number_input("Remuneração mensal (R$)", value=0.0, step=100.0)
