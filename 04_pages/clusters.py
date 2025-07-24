@@ -1,73 +1,83 @@
+
 import streamlit as st
 
 def render():
-    st.title("📊 Perfil dos Clusters")
-    st.markdown("""
-    ## Análise de Clusterização de Candidatos
-    Este relatório apresenta uma análise detalhada dos clusters obtidos a partir de um modelo de KMeans aplicado sobre perfis de candidatos. A clusterização considerou dados educacionais, experiência, presença de informações relevantes (como SAP e remuneração), e foi enriquecida com flags para dados ausentes.
+    st.markdown('''''')
+    st.markdown('''## Análise de Clusterização de Candidatos''')
+    st.markdown('''''')
+    st.markdown('''Este relatório apresenta uma análise detalhada dos clusters obtidos a partir de um modelo de KMeans aplicado sobre perfis de candidatos. A clusterização considerou dados educacionais, experiência, presença de informações relevantes (como SAP e remuneração).''')
+    st.markdown('''''')
+    st.markdown('''---''')
+    st.markdown('''''')
 
-    ### Clusters Identificados:
+    # Cluster 0
+    st.markdown('''### **Cluster 0 — "Exploradores Técnicos"**''')
+    st.markdown('''''')
+    st.markdown('''🧠 **Descrição**:  ''')
+    st.markdown('''Candidatos com presença marcante na área de **Tecnologia da Informação**.  ''')
+    st.markdown('''Apresentam nível hierárquico médio de especialista/consultor (3.26) e baixa média de escolaridade formal.  ''')
+    st.markdown('''Apesar disso, possuem alguma experiência e perfil técnico.''')
+    st.markdown('''''')
+    st.markdown('''🏷️ **Área mais frequente**: Tecnologia da Informação  ''')
+    st.markdown('''💰 **Remuneração**: 🔽 abaixo da média  ''')
+    st.markdown('''💼 **Experiência (anos)**: 🔽 abaixo da média  ''')
+    st.markdown('''📊 **Qtd. de experiências**: 🔽 abaixo da média  ''')
+    st.markdown('''🧠 **Experiência com SAP**: 7%  ''')
+    st.markdown('''''')
+    st.markdown('''---''')
+    st.markdown('''''')
 
-    ---
-    
-    **Cluster 0 — "Veteranos Invisíveis"**  
+    # Cluster 1
+    st.markdown('''### **Cluster 1 — "Veteranos Invisíveis"**''')
+    st.markdown('''''')
+    st.markdown('''🧠 **Descrição**:  ''')
+    st.markdown('''Profissionais com **boa formação educacional (3.15)** e hierarquia mais elevada.  ''')
+    st.markdown('''Estão presentes principalmente na área **Jurídica**, e uma parte relevante tem experiência com SAP.  ''')
+    st.markdown('''Apesar do bom perfil, apresentam comportamento reservado em remuneração e histórico profissional.''')
+    st.markdown('''''')
+    st.markdown('''🏷️ **Área mais frequente**: Jurídico  ''')
+    st.markdown('''💰 **Remuneração**: 🔼 acima da média  ''')
+    st.markdown('''💼 **Experiência (anos)**: 🔼 acima da média  ''')
+    st.markdown('''📊 **Qtd. de experiências**: 🔼 acima da média  ''')
+    st.markdown('''🧠 **Experiência com SAP**: 31%  ''')
+    st.markdown('''''')
+    st.markdown('''---''')
+    st.markdown('''''')
 
-    🧠 **Descrição**:  
-    Profissionais com forte formação e vivência, mas que preferem manter  
-    discrição em relação à remuneração e objetivos. Muitos ocupam posições de gerência.  
-    Perfil técnico e maduro, provavelmente estável no mercado.  
+    # Cluster 2
+    st.markdown('''### **Cluster 2 — "Sombras do Cadastro"**''')
+    st.markdown('''''')
+    st.markdown('''🧠 **Descrição**:  ''')
+    st.markdown('''Candidatos com baixíssimo nível educacional (média ≈ 0) e pouco histórico profissional.  ''')
+    st.markdown('''Grande parte pertence à área Jurídica, o que pode ser ruído nos dados.  ''')
+    st.markdown('''Possuem baixa hierarquia e menor participação em SAP ou experiência sólida.''')
+    st.markdown('''''')
+    st.markdown('''🏷️ **Área mais frequente**: Jurídico  ''')
+    st.markdown('''💰 **Remuneração**: 🔽 abaixo da média  ''')
+    st.markdown('''💼 **Experiência (anos)**: 🔽 abaixo da média  ''')
+    st.markdown('''📊 **Qtd. de experiências**: 🔽 abaixo da média  ''')
+    st.markdown('''🧠 **Experiência com SAP**: 14%  ''')
+    st.markdown('''''')
+    st.markdown('''---''')
+    st.markdown('''''')
 
-    🏷️ **Área mais frequente**: Saúde  
-    💰 **Remuneração**: não informada  
-    🎓 **Escolaridade**: ensino superior completo  
-    💼 **Experiência**: média positiva (experiência presente)  
-    🧠 **Experiência com SAP**: 32% possuem experiência
+    # Cluster 3
+    st.markdown('''### **Cluster 3 — "Especialistas Aspiracionais"**''')
+    st.markdown('''''')
+    st.markdown('''🧠 **Descrição**:  ''')
+    st.markdown('''Grupo qualificado, com média de escolaridade de **pós-graduação** (3.24) e forte presença na área de TI.  ''')
+    st.markdown('''Mostram bom nível hierárquico (3.11) e experiência relevante, incluindo boa participação em SAP.  ''')
+    st.markdown('''São candidatos mais preparados para liderança e crescimento.''')
+    st.markdown('''''')
+    st.markdown('''🏷️ **Área mais frequente**: Tecnologia da Informação  ''')
+    st.markdown('''💰 **Remuneração**: 🔼 acima da média  ''')
+    st.markdown('''💼 **Experiência (anos)**: 🔼 acima da média  ''')
+    st.markdown('''📊 **Qtd. de experiências**: 🔼 acima da média  ''')
+    st.markdown('''🧠 **Experiência com SAP**: 29%  ''')
+    st.markdown('''''')
+    st.markdown('''---''')
+    st.markdown('''''')
 
-    ---
-    
-    **Cluster 1 — "Exploradores em Branco"**  
-
-    🧠 **Descrição**:  
-    Candidatos iniciantes ou com perfis incompletos. Representam possível  
-    público jovem, sem trajetória definida, ou registros abandonados. Baixo engajamento com o sistema.  
-
-    🏷️ **Área mais frequente**: Tecnologia da Informação  
-    💰 **Remuneração**: ligeiramente abaixo da média  
-    🎓 **Escolaridade**: ensino fundamental/médio incompleto  
-    💼 **Experiência**: ausente  
-    🧠 **Experiência com SAP**: 2% possuem experiência  
-
-    ---
-    
-    **Cluster 2 — "Especialistas Aspiracionais"**  
-
-    🧠 **Descrição**:  
-    Grupo mais qualificado e competitivo. Profissionais com alta formação e vivência técnica,  
-    geralmente de TI. São os candidatos mais completos e com maior potencial para posições de liderança  
-    ou alta performance.  
-
-    🏷️ **Área mais frequente**: Tecnologia da Informação  
-    💰 **Remuneração**: acima da média  
-    🎓 **Escolaridade**: pós-graduação ou superior completo  
-    💼 **Experiência**: alta  
-    🧠 **Experiência com SAP**: 35% possuem experiência  
-
-    ---
-    
-    **Cluster 3 — "Sombras do Cadastro"**  
-
-    🧠 **Descrição**:  
-    Usuários com perfis extremamente vazios. Podem representar registros não finalizados  
-    ou abandonados. Pouca utilidade em campanhas de contratação até que o preenchimento seja refeito.  
-
-    🏷️ **Área mais frequente**: Saúde  
-    💰 **Remuneração**: não informada  
-    🎓 **Escolaridade**: ensino médio  
-    💼 **Experiência**: ausente  
-    🧠 **Experiência com SAP**: 19% possuem experiência  
-
-    ---
-    
-    ### Considerações Finais:
-    A clusterização permitiu identificar perfis bem distintos, desde profissionais completos e preparados para o mercado até cadastros escassos de informações. A presença ou ausência de variáveis-chave (como remuneração e experiência) foi crucial para a separação dos grupos. As informações obtidas podem apoiar campanhas de recrutamento, filtragem de perfis, e ações para enriquecer cadastros incompletos.
-    """)
+    st.markdown('''### Considerações Finais:''')
+    st.markdown('''''')
+    st.markdown('''A clusterização permitiu identificar perfis distintos — desde candidatos altamente qualificados até registros quase vazios. Os dados podem apoiar campanhas de recrutamento, estratégias de qualificação e decisões de negócio em RH.''')

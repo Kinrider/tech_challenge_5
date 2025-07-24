@@ -98,14 +98,21 @@ def render():
         cluster_predito = modelo.predict(df_final)[0]
 
         nomes_clusters = {
-            0: "Veteranos Invisíveis",
-            1: "Exploradores em Branco",
-            2: "Especialistas Aspiracionais",
-            3: "Sombras do Cadastro"
+            0: "Exploradores Técnicos",
+            1: "Veteranos Invisíveis",
+            2: "Sombras do Cadastro",
+            3: "Especialistas Aspiracionais"
         }
 
         nome_cluster = nomes_clusters.get(cluster_predito, f"Cluster {cluster_predito}")
         st.success(f"✅ O candidato foi classificado no **Cluster {cluster_predito} — {nome_cluster}**.")
+        
+        # Salva no session_state
+        st.session_state["candidato_classificado"] = {
+            "nome": nome,
+            "estado": estado,
+            "cluster": cluster_predito
+        }
 
 if __name__ == "__main__":
     render()
