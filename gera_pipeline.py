@@ -11,9 +11,6 @@ from transformadores_customizados import (
     BooleanToInt
 )
 
-# === Dataset de exemplo para ajuste do pipeline ===
-df = pd.read_parquet("03_modelos/dados_input_modelo.parquet")
-
 # === Definição de colunas ===
 colunas_ordinal = ["nivel_hierarquico", "nivel_educacional"]
 colunas_booleanas = ["experiencia_sap"]
@@ -43,9 +40,6 @@ preprocessador = ColumnTransformer(transformers=[
     ("onehot", OneHotEncoder(handle_unknown="ignore", drop="first"), colunas_categoricas)
 ])
 
-# === Treinar o pipeline com os dados ===
-preprocessador.fit(df)
-
 # === Salvar pipeline ===
 joblib.dump(preprocessador, "03_modelos/pipeline_preprocessamento.joblib")
-print("✅ Pipeline treinado e salvo em: 03_modelos/pipeline_preprocessamento.joblib")
+print("✅ Pipeline salvo em: 03_modelos/pipeline_preprocessamento.joblib")

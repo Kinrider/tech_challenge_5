@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import requests
-from io import BytesIO
 
-# Importar as classes necessárias para carregar o pipeline com sucesso
 from transformadores_customizados import (
     HierarquiaOrdinalTransformer,
     EducacionalOrdinalTransformer,
@@ -13,10 +10,10 @@ from transformadores_customizados import (
 
 @st.cache_resource
 def carregar_modelo_pipeline():
-    BASE_GITHUB = "https://github.com/Kinrider/tech_challenge_5/raw/main/03_modelos"
-    modelo = joblib.load(BytesIO(requests.get(f"{BASE_GITHUB}/modelo_kmeans.joblib").content))
-    pipeline = joblib.load(BytesIO(requests.get(f"{BASE_GITHUB}/pipeline_preprocessamento.joblib").content))
-    return modelo, pipeline
+    modelo = joblib.load("03_modelos/modelo_kmeans.joblib")
+    pipeline = joblib.load("03_modelos/pipeline_preprocessamento.joblib")
+    colunas_modelo = joblib.load("03_modelos/colunas_usadas.joblib")
+    return modelo, pipeline, colunas_modelo
 
 def render():
     st.title("📝 Cadastro de Novo Candidato")
@@ -24,9 +21,11 @@ def render():
     estados = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"]
     niveis = ['Estagiário', 'Analista', 'Especialista', 'Consultor', 'Coordenador', 'Gerente', 'Diretor', 'C-Level']
     escolaridades = ['ensino fundamental', 'ensino médio', 'ensino superior', 'superior incompleto', 'pós-graduação ou mais', 'não identificado']
-    categorias = ['Comercial / Negócios', 'Consultoria / Projetos', 'Design / Criação', 'Educação / Treinamento',
-                  'Engenharia', 'Financeiro / Contábil', 'Indefinido', 'Jurídico', 'Logística / Suprimentos',
-                  'Marketing / Comunicação', 'RH / Pessoas', 'Saúde', 'Tecnologia da Informação']
+    categorias = [
+        "Consultoria / Projetos", "Design / Criação", "Educação / Treinamento", "Engenharia",
+        "Financeiro / Contábil", "Indefinido", "Jurídico", "Logística / Suprimentos",
+        "Marketing / Comunicação", "RH / Pessoas", "Saúde", "Tecnologia da Informação"
+    ]
 
     with st.form("form_candidato"):
         nome = st.text_input("Nome do candidato")
@@ -42,7 +41,7 @@ def render():
         submitted = st.form_submit_button("Classificar")
 
     if submitted:
-        modelo, pipeline = carregar_modelo_pipeline()
+        modelo, pipeline, colunas_modelo = carregar_modelo_pipeline()
 
         input_dict = {
             "nivel_educacional": nivel_educacional,
@@ -56,7 +55,9 @@ def render():
 
         df_input = pd.DataFrame([input_dict])
         X_processado = pipeline.transform(df_input)
-        cluster_predito = modelo.predict(X_processado)[0]
+
+        df_final = pd.DataFrame(X_processado, columns=colunas_modelo)
+        cluster_predito = modelo.predict(df_final)[0]
 
         nomes_clusters = {
             0: "Veteranos Invisíveis",
