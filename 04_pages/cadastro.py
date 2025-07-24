@@ -4,11 +4,14 @@ import joblib
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
+import requests
+from io import BytesIO
 
 @st.cache_resource
 def carregar_modelo_e_scaler():
-    modelo = joblib.load("03_modelos/modelo_kmeans.joblib")
-    colunas_modelo = joblib.load("03_modelos/colunas_usadas.joblib")
+    BASE_GITHUB = "https://github.com/Kinrider/tech_challenge_5/raw/main/03_modelos"
+    modelo = joblib.load(BytesIO(requests.get(f"{BASE_GITHUB}/modelo_kmeans.joblib").content))
+    colunas_modelo = joblib.load(BytesIO(requests.get(f"{BASE_GITHUB}/colunas_usadas.joblib").content))
     return modelo, colunas_modelo
 
 def aplicar_tratamentos(df):
