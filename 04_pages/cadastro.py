@@ -1,19 +1,53 @@
 import streamlit as st
 import pandas as pd
 import joblib
-
-from transformadores_customizados import (
-    HierarquiaOrdinalTransformer,
-    EducacionalOrdinalTransformer,
-    BooleanToInt
-)
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 
 @st.cache_resource
-def carregar_modelo_pipeline():
+def carregar_modelo_e_scaler():
     modelo = joblib.load("03_modelos/modelo_kmeans.joblib")
-    pipeline = joblib.load("03_modelos/pipeline_preprocessamento.joblib")
     colunas_modelo = joblib.load("03_modelos/colunas_usadas.joblib")
-    return modelo, pipeline, colunas_modelo
+    return modelo, colunas_modelo
+
+def aplicar_tratamentos(df):
+    # Tratamento de nivel_hierarquico
+    mapa_hierarquico = {
+        'estagiario': 1, 'analista': 2, 'especialista': 3, 'consultor': 3,
+        'coordenador': 4, 'gerente': 5, 'diretor': 6, 'c-level': 7,
+        'não identificado': 0, None: 0
+    }
+    df['nivel_hierarquico'] = df['nivel_hierarquico'].str.lower().fillna("não identificado")
+    df['nivel_hierarquico'] = df['nivel_hierarquico'].map(mapa_hierarquico).fillna(0).astype(int)
+
+    # Tratamento de nivel_educacional
+    mapa_educacional = {
+        'ensino fundamental': 1, 'ensino médio': 2, 'ensino superior': 3,
+        'superior incompleto': 3, 'pós-graduação ou mais': 4,
+        'não identificado': 0, None: 0
+    }
+    df['nivel_educacional'] = df['nivel_educacional'].map(mapa_educacional).fillna(0).astype(int)
+
+    # Conversão de variável booleana experiencia_sap
+    df['experiencia_sap'] = df['experiencia_sap'].astype(int)
+
+    # One-hot encoding para variáveis categóricas
+    df = pd.get_dummies(df, columns=['categoria_profissional'], drop_first=True)
+
+    # Variáveis contínuas + tratamento com pipeline interno
+    variaveis_continuas = ['remuneracao_zscore', 'tempo_experiencia_anos', 'quantidade_experiencias']
+    pipeline_numerico = Pipeline([
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler())
+    ])
+    df[variaveis_continuas] = pipeline_numerico.fit_transform(df[variaveis_continuas])
+
+    # Flags de presença
+    for col in variaveis_continuas:
+        df[f"tem_{col}"] = df[col].notnull().astype(int)
+
+    return df
 
 def render():
     st.title("📝 Cadastro de Novo Candidato")
@@ -41,7 +75,7 @@ def render():
         submitted = st.form_submit_button("Classificar")
 
     if submitted:
-        modelo, pipeline, colunas_modelo = carregar_modelo_pipeline()
+        modelo, colunas_modelo = carregar_modelo_e_scaler()
 
         input_dict = {
             "nivel_educacional": nivel_educacional,
@@ -54,9 +88,13 @@ def render():
         }
 
         df_input = pd.DataFrame([input_dict])
-        X_processado = pipeline.transform(df_input)
+        df_tratado = aplicar_tratamentos(df_input)
 
-        df_final = pd.DataFrame(X_processado, columns=colunas_modelo)
+        for col in colunas_modelo:
+            if col not in df_tratado.columns:
+                df_tratado[col] = 0
+        df_final = df_tratado[colunas_modelo]
+
         cluster_predito = modelo.predict(df_final)[0]
 
         nomes_clusters = {

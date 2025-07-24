@@ -11,7 +11,7 @@ from transformadores_customizados import (
     BooleanToInt
 )
 
-# === Dataset de exemplo para ajuste do pipeline ===
+# === Carregar base tratada ===
 df = pd.read_parquet("03_modelos/dados_input_modelo.parquet")
 
 # === Definição de colunas ===
@@ -21,9 +21,12 @@ colunas_numericas = ["remuneracao_zscore", "tempo_experiencia_anos", "quantidade
 colunas_categoricas = ["categoria_profissional"]
 
 # === Pipelines por tipo ===
-ordinal_pipeline = ColumnTransformer(transformers=[
-    ("hierarquia", HierarquiaOrdinalTransformer(), "nivel_hierarquico"),
-    ("educacional", EducacionalOrdinalTransformer(), "nivel_educacional")
+ordinal_pipeline = Pipeline([
+    ("hierarquia", HierarquiaOrdinalTransformer())
+])
+
+educacional_pipeline = Pipeline([
+    ("educacional", EducacionalOrdinalTransformer())
 ])
 
 boolean_pipeline = Pipeline([
@@ -35,17 +38,18 @@ numerico_pipeline = Pipeline([
     ("scaler", StandardScaler())
 ])
 
-# === Compor pipeline completo ===
+# === Compor ColumnTransformer final ===
 preprocessador = ColumnTransformer(transformers=[
-    ("ordinais", ordinal_pipeline, colunas_ordinal),
-    ("booleanos", boolean_pipeline, colunas_booleanas),
+    ("nivel_hierarquico", HierarquiaOrdinalTransformer(), "nivel_hierarquico"),
+    ("nivel_educacional", EducacionalOrdinalTransformer(), "nivel_educacional"),
+    ("experiencia_sap", BooleanToInt(), ["experiencia_sap"]),
     ("numericos", numerico_pipeline, colunas_numericas),
-    ("onehot", OneHotEncoder(handle_unknown="ignore", drop="first"), colunas_categoricas)
+    ("categoria_profissional", OneHotEncoder(handle_unknown="ignore", drop="first"), colunas_categoricas)
 ])
 
-# === Treinar o pipeline com os dados ===
+# === Treinar pipeline com o DataFrame ===
 preprocessador.fit(df)
 
-# === Salvar pipeline ===
+# === Salvar pipeline treinado ===
 joblib.dump(preprocessador, "03_modelos/pipeline_preprocessamento.joblib")
-print("✅ Pipeline treinado e salvo em: 03_modelos/pipeline_preprocessamento.joblib")
+print("✅ Pipeline treinado e salvo com sucesso em: 03_modelos/pipeline_preprocessamento.joblib")
